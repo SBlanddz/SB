@@ -89,7 +89,7 @@
 
         /* --- MAIN UI --- */
         #main-ui { 
-            display: none; /* Keep hidden until enterSite is called */
+            display: none; 
             opacity: 0; 
             transition: opacity 0.8s; 
             padding-top: 60px; 
@@ -185,25 +185,25 @@
                 </div>
                 
                 <div class="items-container">
-                    <div class="item-slot" onclick="loadItem('SON GOKU // SAIYAN SPIRIT', '€ 50.00', ['goku t design.png', 'goku (1).png', 'goku (2).png', 'goku (3).png'], 95, 'OVER 9000')">
+                    <div class="item-slot" onclick="loadItem('SON GOKU // SAIYAN SPIRIT', '2500 DZD', ['goku t design.png', 'goku (1).png', 'goku (2).png', 'goku (3).png'], 95, 'OVER 9000')">
                         <img src="goku t design.png" alt="Goku">
                     </div>
-                    <div class="item-slot" onclick="loadItem('ASTA // ANTI-MAGIC', '€ 45.00', ['asta-tshirt-design-w.png', 'asta (1).png', 'asta (2).jpg', 'asta (1)_2.png'], 90, 99)">
+                    <div class="item-slot" onclick="loadItem('ASTA // ANTI-MAGIC', '2200 DZD', ['asta-tshirt-design-w.png', 'asta (1).png', 'asta (2).jpg', 'asta (1)_2.png'], 90, 99)">
                         <img src="asta-tshirt-design-w.png" alt="Asta">
                     </div>
-                    <div class="item-slot" onclick="loadItem('AKAZA // UPPER MOON THREE', '€ 45.00', ['akaza t design.png', 'akaza (2).png', 'akaza (3).png', 'akaza (4).png'], 92, 98)">
+                    <div class="item-slot" onclick="loadItem('AKAZA // UPPER MOON THREE', '2200 DZD', ['akaza t design.png', 'akaza (2).png', 'akaza (3).png', 'akaza (4).png'], 92, 98)">
                         <img src="akaza t design.png" alt="Akaza">
                     </div>
-                    <div class="item-slot" onclick="loadItem('VEGITO // POTARA FUSION', '€ 50.00', ['vegito t design.png', 'vegito (1).jpg', 'vegito (2).jpg', 'vegito (3).jpg'], 97, 100)">
+                    <div class="item-slot" onclick="loadItem('VEGITO // POTARA FUSION', '2500 DZD', ['vegito t design.png', 'vegito (1).jpg', 'vegito (2).jpg', 'vegito (3).jpg'], 97, 100)">
                         <img src="vegito t design.png" alt="Vegito">
                     </div>
-                    <div class="item-slot" onclick="loadItem('SOUSUKE AIZEN // CHAIR ZEN', '€ 48.00', ['aizen t desing.jpg', 'aizen (1).png', 'aizen (2).png', 'aizen (3).png'], 94, 100)">
+                    <div class="item-slot" onclick="loadItem('SOUSUKE AIZEN // CHAIR ZEN', '2400 DZD', ['aizen t desing.jpg', 'aizen (1).png', 'aizen (2).png', 'aizen (3).png'], 94, 100)">
                         <img src="aizen t desing.jpg" alt="Aizen">
                     </div>
-                    <div class="item-slot" onclick="loadItem('MONKEY D. LUFFY // PIRATE KING', '€ 45.00', ['luffy t design.jpg', 'luffy (1).jpg', 'luffy (2).png', 'luffy (3).png'], 96, 100)">
+                    <div class="item-slot" onclick="loadItem('MONKEY D. LUFFY // PIRATE KING', '2200 DZD', ['luffy t design.jpg', 'luffy (1).jpg', 'luffy (2).png', 'luffy (3).png'], 96, 100)">
                         <img src="luffy t design.jpg" alt="Luffy">
                     </div>
-                    <div class="item-slot" onclick="loadItem('SATORU GOJO // THE STRONGEST', '€ 45.00', ['gojo t design.jpg', 'gojo (1).png', 'gojo (2).png', 'gojo (3).png'], 98, 100)">
+                    <div class="item-slot" onclick="loadItem('SATORU GOJO // THE STRONGEST', '2200 DZD', ['gojo t design.jpg', 'gojo (1).png', 'gojo (2).png', 'gojo (3).png'], 98, 100)">
                         <img src="gojo t design.jpg" alt="Gojo">
                     </div>
                 </div>
@@ -216,7 +216,7 @@
                 <div class="thumb-nav" id="thumb-container"></div>
 
                 <h2 id="view-title" style="color: var(--cp-yellow); text-transform: uppercase; margin: 0;">SON GOKU // SAIYAN SPIRIT</h2>
-                <div id="view-price" style="color: var(--cp-cyan); font-weight: bold; margin-top: 5px;">€ 50.00 EDDS</div>
+                <div id="view-price" style="color: var(--cp-cyan); font-weight: bold; margin-top: 5px;">2500 DZD</div>
                 
                 <div class="stat-line"><span>FABRIC_STRENGTH</span><span id="stat-1-pc">95%</span></div>
                 <div class="bar-bg"><div id="bar-1" class="bar-fill" style="width: 95%;"></div></div>
@@ -232,7 +232,6 @@
     <script>
         let currentItemName = "SON GOKU // SAIYAN SPIRIT";
 
-        // Initial setup for thumbnails
         const initialImages = ['goku t design.png', 'goku (1).png', 'goku (2).png', 'goku (3).png'];
         renderThumbs(initialImages);
 
@@ -240,15 +239,12 @@
             const splash = document.getElementById('splash');
             const mainUI = document.getElementById('main-ui');
             
-            // Start the fade out
             splash.style.transition = "opacity 0.8s ease";
             splash.style.opacity = '0';
             
-            // After fade, swap display types
             setTimeout(() => {
                 splash.style.display = 'none';
                 mainUI.style.display = 'block';
-                // Trigger reflow then fade in main UI
                 setTimeout(() => {
                     mainUI.style.opacity = '1';
                 }, 50);
@@ -274,7 +270,8 @@
         function loadItem(name, price, images, s1, s2) {
             currentItemName = name; 
             document.getElementById('view-title').innerText = name;
-            document.getElementById('view-price').innerText = price + " EDDS";
+            // The price is now passed as a string like '2500 DZD'
+            document.getElementById('view-price').innerText = price;
             document.getElementById('active-image').src = images[0];
             document.getElementById('bar-1').style.width = s1 + "%";
             document.getElementById('stat-1-pc').innerText = s1 + "%";
@@ -298,11 +295,9 @@
             btn.style.background = "var(--cp-cyan)";
             btn.style.color = "black";
 
-            // The URL with the entry point for the "Item Name" question
             const baseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSetP_Eii8bMHsYgAopYnsCvfboId0D7YYKFaT8SfXJLiLnrPA/viewform?usp=pp_url&entry.690193608=PRODUCT_NAME";
             const finalUrl = baseUrl.replace("PRODUCT_NAME", encodeURIComponent(currentItemName));
             
-            // Use a short delay only for the visual "glitch" effect
             setTimeout(() => {
                 window.open(finalUrl, '_blank');
                 btn.innerText = originalText;
