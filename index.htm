@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SB.LANDDZ // NEURAL_INTERFACE</title>
+    <style>
+        :root {
+            --cp-yellow: #fcee0a;
+            --cp-cyan: #00ffcc;
+            --cp-magenta: #ff003c;
+            --cp-bg: #070708;
+            --cp-gray: #1a1c1e;
+        }
+
+        * { box-sizing: border-box; cursor: crosshair; }
+
+        body {
+            background-color: var(--cp-bg);
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), var(--cp-bg);
+            background-size: 100% 2px;
+        }
+
+        /* --- SPLASH --- */
+        #splash {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000 url('5-tshirts.jpg') no-repeat center center;
+            background-size: cover;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center;
+        }
+
+        .splash-logo-container { text-align: center; animation: logo-glow 2s infinite alternate; }
+        .splash-logo-container img { width: 250px; margin-bottom: 10px; }
+        .splash-logo-text { display: block; color: var(--cp-yellow); font-size: 42px; font-weight: 900; letter-spacing: 10px; font-style: italic; }
+
+        @keyframes logo-glow { from { opacity: 0.8; transform: scale(1); } to { opacity: 1; transform: scale(1.05); } }
+
+        .enter-btn {
+            background: var(--cp-yellow); color: black; padding: 20px 50px;
+            font-size: 20px; font-weight: 900; text-transform: uppercase; border: none;
+            clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%); cursor: pointer;
+        }
+
+        /* --- HEADER & NAV --- */
+        header {
+            background: var(--cp-yellow); display: flex; justify-content: space-between;
+            align-items: center; height: 50px; padding-right: 5%;
+            clip-path: polygon(0 0, 100% 0, 100% 70%, 98% 100%, 0 100%);
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+        }
+
+        .logo-box {
+            background: black; padding: 0 30px; display: flex; align-items: center;
+            clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%); height: 100%;
+        }
+        .logo-box img { height: 30px; }
+        .logo-label { color: white; margin-left: 15px; font-weight: 900; letter-spacing: 2px; font-style: italic; font-size: 14px; }
+
+        nav { display: flex; gap: 15px; }
+        .nav-link {
+            color: black; text-decoration: none; font-weight: 900; font-size: 13px;
+            text-transform: uppercase; letter-spacing: 1px; cursor: pointer;
+            padding: 5px 15px; transition: 0.2s;
+        }
+        .nav-link:hover {
+            background: black; color: var(--cp-yellow);
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
+        }
+
+        /* --- ABOUT MODAL --- */
+        #about-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center;
+        }
+        .modal-content { background: var(--cp-gray); border: 2px solid var(--cp-yellow); width: 90%; max-width: 600px; padding: 40px; position: relative; }
+        .close-modal { position: absolute; top: 10px; right: 15px; color: var(--cp-magenta); font-weight: bold; cursor: pointer; }
+
+        /* --- HERO SECTION --- */
+        #main-ui { display: none; opacity: 0; transition: opacity 0.8s; padding-top: 80px; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 5% 40px; }
+
+        .selected-item-hero {
+            background: rgba(18, 20, 22, 0.95); border: 1px solid var(--cp-cyan);
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px; padding: 40px;
+            margin-bottom: 60px; box-shadow: 0 0 20px rgba(0, 255, 204, 0.15);
+        }
+
+        .hero-visual-area { display: flex; flex-direction: column; gap: 15px; }
+        .hero-visual { background: #000; border: 1px solid #333; height: 400px; display: flex; justify-content: center; align-items: center; }
+        .hero-visual img { max-height: 95%; max-width: 95%; object-fit: contain; }
+
+        /* --- THUMBS --- */
+        .thumb-nav { display: flex; gap: 10px; overflow-x: auto; }
+        .thumb-nav img { width: 80px; height: 80px; object-fit: cover; border: 1px solid #444; cursor: pointer; opacity: 0.6; transition: 0.3s; }
+        .thumb-nav img:hover, .thumb-nav img.active { opacity: 1; border-color: var(--cp-cyan); }
+
+        .hero-info { display: flex; flex-direction: column; justify-content: center; }
+        .hero-info h1 { color: var(--cp-yellow); font-size: 32px; margin: 0; font-style: italic; text-transform: uppercase; }
+        .hero-price { color: var(--cp-cyan); font-size: 24px; font-weight: bold; margin: 10px 0; font-family: monospace; }
+        
+        .stat-label-row { display: flex; justify-content: space-between; font-size: 11px; margin-top: 15px; }
+        .stat-bar-bg { background: #222; height: 4px; width: 100%; margin-top: 6px; }
+        .stat-bar-fill { background: var(--cp-cyan); height: 100%; transition: width 0.6s; }
+
+        .buy-btn {
+            width: 100%; padding: 20px; background: var(--cp-magenta); color: white;
+            border: none; font-weight: 900; text-transform: uppercase; margin-top: 30px;
+            clip-path: polygon(0 0, 100% 0, 100% 75%, 92% 100%, 0 100%);
+            cursor: pointer; font-size: 16px; transition: 0.3s;
+        }
+        .buy-btn:hover { letter-spacing: 2px; background: #ff2b5d; }
+
+        .inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
+        .item-card { background: var(--cp-gray); border: 1px solid #333; aspect-ratio: 1/1; cursor: pointer; overflow: hidden; }
+        .item-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; transition: 0.3s; }
+        .item-card:hover img { opacity: 1; transform: scale(1.05); }
+
+        @media (max-width: 850px) { .selected-item-hero { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <div id="splash">
+        <div class="splash-logo-container">
+            <img src="logo.png" alt="Logo">
+            <span class="splash-logo-text">SB.LANDDZ</span>
+        </div>
+        <button class="enter-btn" onclick="enterSite()">INITIALIZE_INTERFACE</button>
+    </div>
+
+    <div id="about-modal" onclick="toggleAbout(false)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="toggleAbout(false)">[X]</span>
+            <h2 style="color:var(--cp-yellow); font-style: italic;">// MISSION_STATEMENT</h2>
+            <p style="color:#ccc; font-family: monospace; line-height: 1.6; font-size: 14px;">
+                SB.LANDDZ provides high-end apparel for the digital vanguard. <br><br>
+                Our gear is optimized for style and durability in the urban jungle. 
+                Each unit is crafted with precision-mapped designs.
+            </p>
+            <p style="color:var(--cp-cyan); font-size: 12px; font-weight: bold; margin-top: 20px;">STATUS: ONLINE</p>
+        </div>
+    </div>
+
+    <div id="main-ui">
+        <header>
+            <div class="logo-box">
+                <img src="logo.png"> 
+                <span class="logo-label">SB.LANDDZ</span>
+            </div>
+            <nav>
+                <a class="nav-link" onclick="window.scrollTo({top:0, behavior:'smooth'})">HOME</a>
+                <a class="nav-link" onclick="toggleAbout(true)">ABOUT</a>
+            </nav>
+        </header>
+
+        <div class="container">
+            <section class="selected-item-hero">
+                <div class="hero-visual-area">
+                    <div class="hero-visual">
+                        <img src="goku t design.png" id="hero-img">
+                    </div>
+                    <div class="thumb-nav" id="thumb-container"></div>
+                </div>
+                
+                <div class="hero-info">
+                    <h1 id="hero-title">SON GOKU // SAIYAN SPIRIT</h1>
+                    <div class="hero-price" id="hero-price">2500 DZD</div>
+                    
+                    <div class="stat-label-row"><span>FABRIC_STRENGTH</span><span id="stat-1-val">95%</span></div>
+                    <div class="stat-bar-bg"><div id="stat-1-bar" class="stat-bar-fill" style="width: 95%;"></div></div>
+
+                    <div class="stat-label-row"><span id="stat-2-label">SPIRIT_ENERGY</span><span id="stat-2-val">OVER 9000</span></div>
+                    <div class="stat-bar-bg"><div id="stat-2-bar" class="stat-bar-fill" style="width: 100%; background: var(--cp-yellow);"></div></div>
+
+                    <button class="buy-btn" id="buy-button" onclick="checkout()">AUTHORIZE_ACQUISITION</button>
+                </div>
+            </section>
+
+            <div class="inventory-grid">
+                <div class="item-card" onclick="selectItem('SON GOKU // SAIYAN SPIRIT', '2500 DZD', ['goku t design.png', 'goku (1).png', 'goku (2).png', 'goku (3).png'], 95, 'OVER 9000')"><img src="goku t design.png"></div>
+                <div class="item-card" onclick="selectItem('ASTA // ANTI-MAGIC', '2200 DZD', ['asta-tshirt-design-w.png', 'asta (1).png', 'asta (2).jpg', 'asta (1)_2.png'], 90, '99%')"><img src="asta-tshirt-design-w.png"></div>
+                <div class="item-card" onclick="selectItem('AKAZA // UPPER MOON THREE', '2200 DZD', ['akaza t design.png', 'akaza (2).png', 'akaza (3).png', 'akaza (4).png'], 92, '98%')"><img src="akaza t design.png"></div>
+                <div class="item-card" onclick="selectItem('VEGITO // POTARA FUSION', '2500 DZD', ['vegito t design.png', 'vegito (1).jpg', 'vegito (2).jpg', 'vegito (3).jpg'], 97, '100%')"><img src="vegito t design.png"></div>
+                <div class="item-card" onclick="selectItem('SOUSUKE AIZEN // CHAIR ZEN', '2400 DZD', ['aizen t desing.jpg', 'aizen (1).png', 'aizen (2).png', 'aizen (3).png'], 94, '100%')"><img src="aizen t desing.jpg"></div>
+                <div class="item-card" onclick="selectItem('MONKEY D. LUFFY // PIRATE KING', '2200 DZD', ['luffy t design.jpg', 'luffy (1).jpg', 'luffy (2).png', 'luffy (3).png'], 96, '100%')"><img src="luffy t design.jpg"></div>
+                <div class="item-card" onclick="selectItem('SATORU GOJO // THE STRONGEST', '2200 DZD', ['gojo t design.jpg', 'gojo (1).png', 'gojo (2).png', 'gojo (3).png'], 98, '100%')"><img src="gojo t design.jpg"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentItemName = "SON GOKU // SAIYAN SPIRIT";
+
+        // Initial setup for Goku
+        window.onload = () => {
+            renderThumbs(['goku t design.png', 'goku (1).png', 'goku (2).png', 'goku (3).png']);
+        };
+
+        function enterSite() {
+            document.getElementById('splash').style.display = 'none';
+            const main = document.getElementById('main-ui');
+            main.style.display = 'block';
+            setTimeout(() => main.style.opacity = '1', 50);
+        }
+
+        function toggleAbout(show) {
+            document.getElementById('about-modal').style.display = show ? 'flex' : 'none';
+        }
+
+        function renderThumbs(images) {
+            const container = document.getElementById('thumb-container');
+            container.innerHTML = '';
+            images.forEach((src, index) => {
+                const img = document.createElement('img');
+                img.src = src;
+                if(index === 0) img.classList.add('active');
+                img.onclick = function() {
+                    document.getElementById('hero-img').src = src;
+                    document.querySelectorAll('.thumb-nav img').forEach(t => t.classList.remove('active'));
+                    img.classList.add('active');
+                };
+                container.appendChild(img);
+            });
+        }
+
+        function selectItem(name, price, images, s1, s2) {
+            currentItemName = name;
+            document.getElementById('hero-title').innerText = name;
+            document.getElementById('hero-price').innerText = price;
+            document.getElementById('hero-img').src = images[0];
+            document.getElementById('stat-1-val').innerText = s1 + "%";
+            document.getElementById('stat-1-bar').style.width = s1 + "%";
+            document.getElementById('stat-2-val').innerText = s2;
+            document.getElementById('stat-2-bar').style.width = (isNaN(parseInt(s2)) ? 100 : parseInt(s2)) + "%";
+            
+            const label2 = document.getElementById('stat-2-label');
+            label2.innerText = name.includes("GOKU") ? "SPIRIT_ENERGY" : (name.includes("ASTA") ? "MAGIC_RESISTANCE" : "POWER_LEVEL");
+            
+            renderThumbs(images);
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function checkout() {
+            const btn = document.getElementById('buy-button');
+            const originalText = btn.innerText;
+            btn.innerText = "REDIRECTING_TO_UPLINK...";
+            btn.style.background = "var(--cp-cyan)";
+            btn.style.color = "black";
+
+            const baseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSetP_Eii8bMHsYgAopYnsCvfboId0D7YYKFaT8SfXJLiLnrPA/viewform?entry.690193608=";
+            const finalUrl = baseUrl + encodeURIComponent(currentItemName);
+
+            setTimeout(() => {
+                window.location.href = finalUrl;
+                btn.innerText = originalText;
+                btn.style.background = "var(--cp-magenta)";
+                btn.style.color = "white";
+            }, 500);
+        }
+    </script>
+</body>
+</html>
